@@ -1,0 +1,64 @@
+rules_version = '2';
+
+// ourHealth security rules.
+// Copy this whole file into Firebase → Firestore Database → Rules → Publish.
+// Replace the two PASTE_..._UID values with the same User UIDs you put in js/config.js.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---- Only these two accounts can touch anything ----
+    function isMember() {
+      return request.auth != null
+        && request.auth.uid in ['PASTE_BERK_UID', 'PASTE_WIFE_UID'];
+    }
+
+    // New docs must be stamped with your own ID
+    function createsOwn() {
+      return isMember() && request.resource.data.ownerId == request.auth.uid;
+    }
+    // Changing/deleting: it must already be yours, and stay yours
+    function ownsExisting() {
+      return isMember() && resource.data.ownerId == request.auth.uid;
+    }
+    function keepsOwner() {
+      return request.resource.data.ownerId == request.auth.uid;
+    }
+
+    // ---- Profiles: document ID = user ID. Both read, each writes their own ----
+    match /profiles/{uid} {
+      allow read:  if isMember();
+      allow write: if isMember() && request.auth.uid == uid;
+    }
+
+    // ---- Shared data: you both READ everything, each WRITES only their own ----
+    match /{col}/{id} {
+      allow read: if isMember() && col in [
+        'sessions', 'history', 'templates', 'goals', 'bodyMetrics',
+        'foodLog', 'meals', 'customExercises'
+      ];
+      allow create: if col in [
+        'sessions', 'history', 'templates', 'goals', 'bodyMetrics',
+        'foodLog', 'meals', 'customExercises'
+      ] && createsOwn();
+      allow update: if col in [
+        'sessions', 'history', 'templates', 'goals', 'bodyMetrics',
+        'foodLog', 'meals', 'customExercises'
+      ] && ownsExisting() && keepsOwner();
+      allow delete: if col in [
+        'sessions', 'history', 'templates', 'goals', 'bodyMetrics',
+        'foodLog', 'meals', 'customExercises'
+      ] && ownsExisting();
+    }
+
+    // ---- Medications: private, only the owner can read or write ----
+    match /meds/{id} {
+      allow read:   if ownsExisting();
+      allow create: if createsOwn();
+      allow update: if ownsExisting() && keepsOwner();
+      allow delete: if ownsExisting();
+    }
+
+    // Anything not listed above is denied automatically.
+  }
+}
