@@ -16,12 +16,13 @@ window.APP_CONFIG = {
   APP_NAME: "ourHealth",
 
   FIREBASE_CONFIG: {
-    apiKey: "PASTE_HERE",
-    authDomain: "PASTE_HERE.firebaseapp.com",
-    projectId: "PASTE_HERE",
-    storageBucket: "PASTE_HERE.firebasestorage.app",
-    messagingSenderId: "PASTE_HERE",
-    appId: "PASTE_HERE"
+    apiKey: "AIzaSyC_fkbxU7hCOoGjsOpG5uWLCnq-LH5_SbQ",
+    authDomain: "somerfitness-28c7f.firebaseapp.com",
+    projectId: "somerfitness-28c7f",
+    storageBucket: "somerfitness-28c7f.firebasestorage.app",
+    messagingSenderId: "527939509847",
+    appId: "1:527939509847:web:1659f451df2394c029cd12",
+    measurementId: "G-EF2Q0K7810"
   },
 
   MEMBERS: {
