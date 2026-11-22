@@ -27,7 +27,7 @@ window.APP_CONFIG = {
 
   MEMBERS: {
     "PASTE_BERK_UID": { name: "Berk", color: "#38bdf8" },
-    "PASTE_WIFE_UID": { name: "Wife", color: "#f472b6" }
+    "PASTE_WIFE_UID": { name: "Alara", color: "#f472b6" }
   },
 
   // Exercise photos are ~200 MB, too big to upload comfortably through the
